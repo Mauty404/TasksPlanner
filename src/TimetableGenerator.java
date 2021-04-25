@@ -1,31 +1,53 @@
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
-public class TimetableGenerator  {
+public class TimetableGenerator {
 
+    JTable weekTable;
+    JPanel[] hourPanel;
 
-    JLabel[] daysOfWeek;
-    JPanel[] panel;
+    public TimetableGenerator(int numberOfHours) {
 
-    public TimetableGenerator() {
-        daysOfWeek = new JLabel[7];
-        panel = new JPanel[7];
+        String[][] emptyData = new String[numberOfHours*2][8];
 
-        daysOfWeek[0] = new JLabel("Monday");
-        daysOfWeek[1] = new JLabel("Tuesday");
-        daysOfWeek[2] = new JLabel("Wednesday");
-        daysOfWeek[3] = new JLabel("Thursday");
-        daysOfWeek[4] = new JLabel("Friday");
-        daysOfWeek[5] = new JLabel("Saturday");
-        daysOfWeek[6] = new JLabel("Sunday");
+        /*for(String[] a : emptyData) {
+            for(String b : a) {
+                b = "";
+            }
+        }*/
 
-        for (int i=0; i<7; i++) {
-            panel[i] = new JPanel();
-            panel[i].add(daysOfWeek[i]);
+        String[] hoursLabels = new String[numberOfHours*2];
+
+        for(int i=0; i<hoursLabels.length; i++) {
+            if(i%2 == 0) {
+                hoursLabels[i] = Integer.toString(i+7) + ":00";
+            } else hoursLabels[i] = "";
         }
 
-        panel[0].setBackground(Color.blue);
-        panel[1].setBackground(Color.green);
+        for(int i=0; i< emptyData.length; i++) {
+            for(int j=0; j<emptyData[i].length; j++) {
+                if (j == 0) {
+                    emptyData[i][j] = hoursLabels[i];
+                } else emptyData[i][j] = "";
+            }
+        }
+        String[] columnNames = {
+                "", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        };
+
+        weekTable = new JTable(emptyData, columnNames);
+        weekTable.setRowHeight(30);
+
+        TableColumnModel columnModel = weekTable.getColumnModel();
+
+        columnModel.getColumn(0).setPreferredWidth(10);
+        for(int i=1; i<8; i++) {
+            columnModel.getColumn(i).setPreferredWidth(100);
+        }
+
+       /* hourPanel = new JPanel[numberOfHours*2];
+        hourPanel[0].add(new JLabel("HEEEE"));*/
 
     }
 }

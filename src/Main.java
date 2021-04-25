@@ -1,5 +1,7 @@
 public class Main {
+
     public static void main(String[] args) {
-        new MainWindow();
+        MainWindow mainWindow = new MainWindow();
+        mainWindow.createMainWindow();
     }
 }
