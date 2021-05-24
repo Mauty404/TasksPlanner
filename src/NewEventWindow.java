@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 public class NewEventWindow extends JFrame {
     public NewEventWindow() {
+        EventCompositor ev = EventCompositor.getInstance();
         setTitle("Create new event");
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300,300);
@@ -54,7 +55,17 @@ public class NewEventWindow extends JFrame {
         acceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(fromCombo.getSelectedItem());
+                if(fromCombo.getSelectedIndex() < toCombo.getSelectedIndex()) {
+                    EventCompositor.SingleEvent singleEvent = ev.new SingleEvent();
+                    singleEvent.name = eventNameField.getText();
+                    singleEvent.fromHour = fromCombo.getSelectedItem().toString();
+                    singleEvent.toHour = toCombo.getSelectedItem().toString();
+                    ev.components.add(singleEvent);
+                    dispose();
+                    //ev.printAll();
+                } else {
+
+                }
             }
         });
 

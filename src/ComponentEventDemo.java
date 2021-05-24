@@ -9,7 +9,7 @@ public class ComponentEventDemo extends MainWindow implements ComponentListener 
     public void componentResized(ComponentEvent e) {
         Dimension newSize = e.getComponent().getBounds().getSize();
         System.out.println(newSize.width);
-        super.calculateWidthOfSingleColumn();
+        //super.calculateWidthOfSingleColumn();
         //super.setBoundsOfDays();
     }
 

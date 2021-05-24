@@ -19,7 +19,6 @@ public class PopupMenuCreator extends JPopupMenu {
         createNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(getData());
                 new NewEventWindow();
             }
         });

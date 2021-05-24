@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
 public class MainWindow {
@@ -12,8 +13,7 @@ public class MainWindow {
     static final int numberOfHours = 10;
     static final int startHoursFrom = 7;
 
-    int widthOfSingleDayCol;
-    TimetableGenerator ttg;
+    JTable timetable;
 
     PopupMenuCreator popupMenuCreator;
 
@@ -27,6 +27,7 @@ public class MainWindow {
         frame.setSize(800, 420);
         image = new ImageIcon("assets/mainProgramIcon.png");
         frame.setIconImage(image.getImage());
+
 
 
 // MenuBar
@@ -49,11 +50,21 @@ public class MainWindow {
 
 
 
-// Invoke timetable generator with options
+// Create timetable and setting preffered options
 
-        Object[] generatedFulfilament = generateFulfilament();
-        ttg = new TimetableGenerator((Object[][])generatedFulfilament[0], (Object[])generatedFulfilament[1]);
-        JScrollPane sp = new JScrollPane(ttg);
+        timetable = new JTable(new DataTableModel(numberOfHours, startHoursFrom));
+        //timetable.setFillsViewportHeight(true);
+        timetable.setRowHeight(30);
+        timetable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        timetable.setColumnSelectionAllowed(true);
+        TableColumnModel columnModel = timetable.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(10);
+
+        for(int i=0; i<8; i++) { columnModel.getColumn(i).setPreferredWidth(100); }
+
+
+// Adding generated timetable to pane
+        JScrollPane sp = new JScrollPane(timetable);
         frame.add(sp);
 
         frame.setLayout(new GridLayout());
@@ -63,60 +74,17 @@ public class MainWindow {
 // Adding context menu handle to jtable
 
         popupMenuCreator = new PopupMenuCreator();
-        ttg.setComponentPopupMenu(popupMenuCreator);
+        timetable.setComponentPopupMenu(popupMenuCreator);
 
 
 // Setting up listener when selected area is changed
 
-        ttg.getSelectionModel().addListSelectionListener(e -> {
-            //System.out.println(ttg.weekTable.getValueAt(ttg.weekTable.getSelectedRow(),0));
-            popupMenuCreator.setData(ttg.getValueAt(ttg.getSelectedRow(),0));
-
-            TransferObj.setSelectedRow(ttg.getSelectedRow());
-            TransferObj.setSelectedColumn(ttg.getSelectedColumn());
-            //System.out.println("Row: "+ ttg.getSelectedRow());
-            //System.out.println("Column: " + ttg.getSelectedColumn());
+        timetable.getSelectionModel().addListSelectionListener(e -> {
+            popupMenuCreator.setData(timetable.getValueAt(timetable.getSelectedRow(),0));
+            TransferObj.setSelectedRow(timetable.getSelectedRow());
+            TransferObj.setSelectedColumn(timetable.getSelectedColumn());
         });
     }
-
-    public Object[] generateFulfilament() {
-        Object[][] emptyData = new Object[numberOfHours*2+1][8];
-
-        Object[] hoursLabels = new Object[numberOfHours*2+1];
-
-        int counterFullHours = 0;
-        for(int i=0; i<hoursLabels.length; i++) {
-
-            if(i%2 == 0) {
-                hoursLabels[i] = counterFullHours + startHoursFrom + ":00";
-                counterFullHours++;
-            } else hoursLabels[i] = "";
-        }
-
-
-        for(int i=0; i< emptyData.length; i++) {
-            for(int j=0; j<emptyData[i].length; j++) {
-                if (j == 0) {
-                    emptyData[i][j] = hoursLabels[i];
-                } else emptyData[i][j] = "";
-            }
-        }
-        String[] columnNames = {
-                "", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
-        };
-
-        return new Object[] {emptyData, columnNames};
-    }
-
-
-    public int calculateWidthOfSingleColumn() {
-        Dimension sizeOfWindow = frame.getSize();
-        return sizeOfWindow.width / 7;
-    }
-
-
-
-
 }
 
 
