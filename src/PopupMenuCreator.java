@@ -8,8 +8,8 @@ public class PopupMenuCreator extends JPopupMenu {
     JMenuItem createNew = new JMenuItem("Create new event");
     JMenuItem deleteCurrent = new JMenuItem("Delete selected event");
 
-    private Object selectedRow;
-    private Object selectedColumn;
+    private int selectedRow;
+    private int selectedColumn;
 
     public PopupMenuCreator() {
         add(createNew);
@@ -19,7 +19,7 @@ public class PopupMenuCreator extends JPopupMenu {
         createNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new NewEventWindow();
+                new NewEventWindow(getData());
             }
         });
 
@@ -31,11 +31,19 @@ public class PopupMenuCreator extends JPopupMenu {
         }));
     }
 
-    public void setData(Object data) {
-        this.selectedRow = data;
+    public void setData(int selectedRow, int selectedColumn) {
+        this.selectedRow = selectedRow;
+        this.selectedColumn = selectedColumn;
+        //TransferObj.setSelectedColumn();
+
+        //System.out.println("Column: " + selectedColumn);
+        //System.out.println("Row: " + selectedRow);
     }
 
-    public Object getData() {
-        return selectedRow;
+    public int[] getData() {
+        int[] data = new int[2];
+        data[0] = selectedRow;
+        data[1] = selectedColumn;
+        return data;
     }
 }

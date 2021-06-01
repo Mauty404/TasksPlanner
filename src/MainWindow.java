@@ -1,6 +1,9 @@
 import javax.swing.*;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.Iterator;
+import java.util.Vector;
 
 public class MainWindow {
 
@@ -13,7 +16,8 @@ public class MainWindow {
     static final int numberOfHours = 10;
     static final int startHoursFrom = 7;
 
-    JTable timetable;
+    static JTable timetable;
+    TableColumn tableColumn;
 
     PopupMenuCreator popupMenuCreator;
 
@@ -49,24 +53,23 @@ public class MainWindow {
         frame.setJMenuBar(menuBar);
 
 
-
 // Create timetable and setting preffered options
 
         timetable = new JTable(new DataTableModel(numberOfHours, startHoursFrom));
+        tableColumn = timetable.getColumnModel().getColumn(0);
+        //tableColumn.setCellRenderer(new EventRenderer(Color.lightGray));
         //timetable.setFillsViewportHeight(true);
         timetable.setRowHeight(30);
         timetable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         timetable.setColumnSelectionAllowed(true);
         TableColumnModel columnModel = timetable.getColumnModel();
         columnModel.getColumn(0).setPreferredWidth(10);
-
         for(int i=0; i<8; i++) { columnModel.getColumn(i).setPreferredWidth(100); }
 
 
 // Adding generated timetable to pane
         JScrollPane sp = new JScrollPane(timetable);
         frame.add(sp);
-
         frame.setLayout(new GridLayout());
         frame.setVisible(true);
 
@@ -80,10 +83,36 @@ public class MainWindow {
 // Setting up listener when selected area is changed
 
         timetable.getSelectionModel().addListSelectionListener(e -> {
-            popupMenuCreator.setData(timetable.getValueAt(timetable.getSelectedRow(),0));
-            TransferObj.setSelectedRow(timetable.getSelectedRow());
-            TransferObj.setSelectedColumn(timetable.getSelectedColumn());
+            popupMenuCreator.setData(timetable.getSelectedRow(), timetable.getSelectedColumn());
         });
+    }
+
+    static void update() {
+        EventCompositor ev = EventCompositor.getInstance();
+        Iterator<EventCompositor.SingleEvent> it = ev.components.iterator();
+        String concated;
+        int intHourFrom;
+        int rowNumberFrom;
+        while(it.hasNext()) {
+            EventCompositor.SingleEvent singleEvent = it.next();
+            int indexFrom = singleEvent.fromHour.indexOf(':');
+            switch(indexFrom){
+                case 1:
+                    concated = singleEvent.fromHour.substring(0,1);
+                    break;
+                default:
+                    concated = singleEvent.fromHour.substring(0,2);
+                    break;
+            }
+
+            intHourFrom = Integer.parseInt(concated);
+            rowNumberFrom = intHourFrom - startHoursFrom;
+            System.out.println(singleEvent.column);
+            TableColumn col = timetable.getColumn(singleEvent.column);
+            col.setCellRenderer(new EventRenderer( col.getCellRenderer(), Color.magenta,1, 2 ));
+            //System.out.println(indexFrom);
+
+        }
     }
 }
 

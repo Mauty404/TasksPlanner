@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class NewEventWindow extends JFrame {
-    public NewEventWindow() {
+
+    public NewEventWindow(int[] selectedData) {
         EventCompositor ev = EventCompositor.getInstance();
         setTitle("Create new event");
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -25,15 +26,15 @@ public class NewEventWindow extends JFrame {
 
         JLabel fromHour = new JLabel("From: ");
         JComboBox fromCombo = new JComboBox(hoursCombo);
-        fromCombo.setSelectedIndex(TransferObj.getSelectedRow());
+        fromCombo.setSelectedIndex(selectedData[0]);
         JLabel toHour = new JLabel("To: ");
         JComboBox toCombo = new JComboBox(hoursCombo);
 
 
-        if (TransferObj.getSelectedRow()+1 == toCombo.getItemCount())
-            toCombo.setSelectedIndex(TransferObj.getSelectedRow());
+        if (selectedData[0]+1 == toCombo.getItemCount())
+            toCombo.setSelectedIndex(selectedData[0]);
         else
-            toCombo.setSelectedIndex(TransferObj.getSelectedRow()+1);
+            toCombo.setSelectedIndex(selectedData[0]+1);
 
 
         eventNameField.setPreferredSize(new Dimension(100,30));
@@ -60,11 +61,13 @@ public class NewEventWindow extends JFrame {
                     singleEvent.name = eventNameField.getText();
                     singleEvent.fromHour = fromCombo.getSelectedItem().toString();
                     singleEvent.toHour = toCombo.getSelectedItem().toString();
+                    singleEvent.column = selectedData[1];
                     ev.components.add(singleEvent);
+                    ev.printAll();
                     dispose();
-                    //ev.printAll();
+                    MainWindow.update();
                 } else {
-
+                    JOptionPane.showMessageDialog(null, "Wrong time range", "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });

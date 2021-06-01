@@ -18,7 +18,10 @@ public class EventCompositor {
         String name;
         String fromHour;
         String toHour;
+        int column;
     }
+
+
 
     public void printAll() {
         Iterator<SingleEvent> it = components.iterator();
@@ -28,6 +31,7 @@ public class EventCompositor {
             System.out.println("Name: " + singleEvent.name);
             System.out.println("From: " + singleEvent.fromHour);
             System.out.println("To: " + singleEvent.toHour);
+            System.out.println("Column: " + singleEvent.column);
             System.out.println();
         }
     }
