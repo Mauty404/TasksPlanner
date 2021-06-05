@@ -16,6 +16,8 @@ public class MainWindow {
     static final int numberOfHours = 10;
     static final int startHoursFrom = 7;
 
+    static boolean signatures[][] = new boolean[8][numberOfHours*2+1];
+
     static JTable timetable;
     TableColumn tableColumn;
 
@@ -88,9 +90,46 @@ public class MainWindow {
     }
 
     static void update() {
+        for(int i=0 ;i<8; i++)
+            for(int j=0; j<numberOfHours*2+1; j++) {
+                signatures[i][j] = false;
+            }
+
+        int currentHandleColumn;
         EventCompositor ev = EventCompositor.getInstance();
         Iterator<EventCompositor.SingleEvent> it = ev.components.iterator();
-        String concated;
+        while(it.hasNext()) {
+            EventCompositor.SingleEvent singleEvent = it.next();
+            currentHandleColumn = singleEvent.column;
+            int indexFrom = getNumberOfRowFromHour(singleEvent.fromHour);
+            int indexTo = getNumberOfRowFromHour(singleEvent.toHour);
+
+            for(int i=0; i<numberOfHours*2; i++) {
+                if(i>=indexFrom && i <= indexTo) {
+                    signatures[currentHandleColumn][i] = true;
+                }
+            }
+
+        }
+
+        for (int i=0; i<numberOfHours*2+1; i++) {
+            for (int j=0; j<8; j++) {
+                System.out.print(signatures[j][i] + "  ");
+            }
+            System.out.println();
+        }
+
+
+
+        for(int i=0; i<8; i++) {
+            TableColumn col = MainWindow.timetable.getColumnModel().getColumn(i);
+            col.setCellRenderer(new EventRenderer(Color.magenta));
+        }
+
+        //new EventRenderer(Color.magenta);
+
+
+        /*String concated;
         int intHourFrom;
         int rowNumberFrom;
         while(it.hasNext()) {
@@ -105,14 +144,47 @@ public class MainWindow {
                     break;
             }
 
+
+
             intHourFrom = Integer.parseInt(concated);
-            rowNumberFrom = intHourFrom - startHoursFrom;
+            rowNumberFrom = intHourFrom - MainWindow.startHoursFrom;
             System.out.println(singleEvent.column);
-            TableColumn col = timetable.getColumn(singleEvent.column);
-            col.setCellRenderer(new EventRenderer( col.getCellRenderer(), Color.magenta,1, 2 ));
+            TableColumn col = MainWindow.timetable.getColumnModel().getColumn(singleEvent.column);
+            col.setCellRenderer(new EventRenderer( col.getCellRenderer(), Color.magenta));*/
+            MainWindow.timetable.repaint();
+
             //System.out.println(indexFrom);
 
         }
+
+    static int getNumberOfRowFromHour(String data) {
+        String concated;
+        int intHour;
+        int rowNumber;
+        boolean halfFlag = false;
+
+        int indexFrom = data.indexOf(':');
+        switch(indexFrom){
+            case 1:
+                concated = data.substring(0,1);
+                if(data.charAt(2) == '3')
+                    halfFlag = true;
+                break;
+            default:
+                concated = data.substring(0,2);
+                if(data.charAt(3) == '3')
+                    halfFlag = true;
+                break;
+        }
+
+
+        intHour = Integer.parseInt(concated);
+        rowNumber = intHour - startHoursFrom;
+
+        if(halfFlag)
+            return 2*rowNumber+1;
+        else
+            return 2*rowNumber;
     }
 }
 
