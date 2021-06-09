@@ -15,7 +15,6 @@ public class NewEventWindow extends JFrame {
     public NewEventWindow(int[] selectedData) {
         EventCompositor ev = EventCompositor.getInstance();
         setTitle("Create new event");
-        //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300,300);
 
         JLabel eventNameLabel = new JLabel("Event name");
@@ -45,7 +44,6 @@ public class NewEventWindow extends JFrame {
 
 
         eventNameField.setPreferredSize(new Dimension(100,30));
-        //eventNameField.setMinimumSize(new Dimension(40,100));
 
         Container container1 = new Container();
         container1.add(eventNameLabel);
@@ -60,34 +58,30 @@ public class NewEventWindow extends JFrame {
         container2.setLayout(new FlowLayout());
 
         JButton acceptButton = new JButton("Accept");
-        acceptButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(fromCombo.getSelectedIndex() < toCombo.getSelectedIndex()) {
-                    EventCompositor.SingleEvent singleEvent = ev.new SingleEvent();
-                    singleEvent.name = eventNameField.getText();
-                    singleEvent.fromHour = fromCombo.getSelectedItem().toString();
-                    singleEvent.toHour = toCombo.getSelectedItem().toString();
-                    singleEvent.day = selectedData[1];
-                    ev.components.add(singleEvent);
-                    ev.printAll();
-                    dispose();
-                    MainWindow.update();
+        acceptButton.addActionListener(e -> {
+            if(fromCombo.getSelectedIndex() < toCombo.getSelectedIndex()) {
+                EventCompositor.SingleEvent singleEvent = ev.new SingleEvent();
+                singleEvent.name = eventNameField.getText();
+                singleEvent.fromHour = fromCombo.getSelectedItem().toString();
+                singleEvent.toHour = toCombo.getSelectedItem().toString();
+                singleEvent.day = selectedData[1];
+                ev.components.add(singleEvent);
+                dispose();
+                MainWindow.update();
 
-                    PublishEvent event = PublishEvent.builder()
-                            .name(singleEvent.name)
-                            .fromHour(singleEvent.fromHour)
-                            .toHour(singleEvent.toHour)
-                            .day(singleEvent.day)
-                            .build();
-                    try {
-                        service.postEvent(event);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Wrong time range", "Error", JOptionPane.INFORMATION_MESSAGE);
+                PublishEvent event = PublishEvent.builder()
+                        .name(singleEvent.name)
+                        .fromHour(singleEvent.fromHour)
+                        .toHour(singleEvent.toHour)
+                        .day(singleEvent.day)
+                        .build();
+                try {
+                    service.postEvent(event);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Wrong time range", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

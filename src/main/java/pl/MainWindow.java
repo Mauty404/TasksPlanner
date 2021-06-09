@@ -1,16 +1,20 @@
 package pl;
+import HttpClient.Event;
+import HttpClient.HttpClientService;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 public class MainWindow {
 
     JMenuBar menuBar;
-    JMenu manageMenu, fileMenu;
-    JMenuItem manageDatabase, clearCurrent;
+    JMenu fileMenu;
+    JMenuItem  clearCurrent, refresh;
     JFrame frame;
     ImageIcon image;
 
@@ -23,6 +27,8 @@ public class MainWindow {
     TableColumn tableColumn;
 
     PopupMenuCreator popupMenuCreator;
+
+    private static final HttpClientService service = new HttpClientService();
 
     public void createMainWindow() {
 
@@ -45,8 +51,45 @@ public class MainWindow {
         clearCurrent.addActionListener(e -> {
             EventCompositor ev = EventCompositor.getInstance();
             ev.components.clear();
+
+            for(int i=1; i<8; i++) {
+                for (int j=0; j<numberOfHours*2+1; j++) {
+                    timetable.setValueAt("", j, i);
+                }
+            }
+            try {
+                service.deleteAllEvents();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
             update();
         });
+
+        refresh = new JMenuItem("Refresh");
+        fileMenu.add(refresh);
+        refresh.addActionListener(e -> {
+            List<Event> list = null;
+            try {
+                 list = service.getAllEvents();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
+            EventCompositor ev = EventCompositor.getInstance();
+
+            Iterator<Event> it = list.iterator();
+            while(it.hasNext()) {
+                Event event = it.next();
+                EventCompositor.SingleEvent singleEvent = ev.new SingleEvent();
+                singleEvent.name = event.getName();
+                singleEvent.fromHour = event.getFromHour();
+                singleEvent.toHour = event.getToHour();
+                singleEvent.day = event.getDay();
+                ev.components.add(singleEvent);
+            }
+            update();
+        });
+
 
 
         frame.setJMenuBar(menuBar);
@@ -55,8 +98,6 @@ public class MainWindow {
 
         timetable = new JTable(new DataTableModel(numberOfHours, startHoursFrom));
         tableColumn = timetable.getColumnModel().getColumn(0);
-        //tableColumn.setCellRenderer(new EventRenderer(Color.lightGray));
-        //timetable.setFillsViewportHeight(true);
         timetable.setRowHeight(30);
         timetable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         timetable.setColumnSelectionAllowed(true);
@@ -99,22 +140,15 @@ public class MainWindow {
             currentHandleColumn = singleEvent.day;
             int indexFrom = getNumberOfRowFromHour(singleEvent.fromHour);
             int indexTo = getNumberOfRowFromHour(singleEvent.toHour);
-            timetable.setValueAt(singleEvent.name, indexFrom);
+            timetable.setValueAt(singleEvent.name, indexFrom, singleEvent.day);
 
             for(int i=0; i<numberOfHours*2; i++) {
                 if(i>=indexFrom && i <= indexTo) {
                     signatures[currentHandleColumn][i] = true;
                 }
             }
-
         }
 
-        for (int i=0; i<numberOfHours*2+1; i++) {
-            for (int j=0; j<8; j++) {
-                System.out.print(signatures[j][i] + "  ");
-            }
-            System.out.println();
-        }
 
         for(int i=0; i<8; i++) {
             TableColumn col = MainWindow.timetable.getColumnModel().getColumn(i);

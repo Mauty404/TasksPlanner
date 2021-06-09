@@ -47,4 +47,16 @@ public class HttpClientService {
              }
         }
     }
+
+    public void deleteAllEvents() throws  IOException {
+        Request request = new Request.Builder()
+                .url(BASE_URL + "drop")
+                .delete()
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if(response.isSuccessful()) {
+                System.out.println("Successfully");
+            }
+        }
+    }
 }

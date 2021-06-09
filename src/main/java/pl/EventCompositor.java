@@ -1,6 +1,4 @@
 package pl;
-import javax.swing.*;
-import java.util.Iterator;
 import java.util.Vector;
 
 public class EventCompositor {
@@ -13,7 +11,7 @@ public class EventCompositor {
         return singleInstance;
     }
 
-    Vector<SingleEvent> components = new Vector<SingleEvent>();
+    Vector<SingleEvent> components = new Vector<>();
 
     public class SingleEvent {
         String name;
@@ -22,18 +20,4 @@ public class EventCompositor {
         int day;
     }
 
-
-
-    public void printAll() {
-        Iterator<SingleEvent> it = components.iterator();
-        while (it.hasNext()) {
-            System.out.println("---EVENT---");
-            SingleEvent singleEvent = it.next();
-            System.out.println("Name: " + singleEvent.name);
-            System.out.println("From: " + singleEvent.fromHour);
-            System.out.println("To: " + singleEvent.toHour);
-            System.out.println("Day: " + singleEvent.day);
-            System.out.println();
-        }
-    }
 }

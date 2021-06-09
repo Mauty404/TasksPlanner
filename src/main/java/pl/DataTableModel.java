@@ -48,9 +48,6 @@ public class DataTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-/*    @Override
-    public boolean isCellEditable(int row, int col) { return false;}*/
-
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return data[rowIndex][columnIndex];
