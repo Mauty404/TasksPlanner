@@ -42,12 +42,12 @@ public class MainWindow {
         menuBar.add(fileMenu);
         clearCurrent = new JMenuItem("Clear");
         fileMenu.add(clearCurrent);
+        clearCurrent.addActionListener(e -> {
+            EventCompositor ev = EventCompositor.getInstance();
+            ev.components.clear();
+            update();
+        });
 
-
-        manageMenu = new JMenu("Management");
-        menuBar.add(manageMenu);
-        manageDatabase = new JMenuItem("Manage database");
-        manageMenu.add(manageDatabase);
 
         frame.setJMenuBar(menuBar);
 
@@ -99,6 +99,7 @@ public class MainWindow {
             currentHandleColumn = singleEvent.day;
             int indexFrom = getNumberOfRowFromHour(singleEvent.fromHour);
             int indexTo = getNumberOfRowFromHour(singleEvent.toHour);
+            timetable.setValueAt(singleEvent.name, indexFrom);
 
             for(int i=0; i<numberOfHours*2; i++) {
                 if(i>=indexFrom && i <= indexTo) {

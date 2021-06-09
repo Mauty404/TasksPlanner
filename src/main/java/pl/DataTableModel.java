@@ -56,4 +56,9 @@ public class DataTableModel extends AbstractTableModel {
         return data[rowIndex][columnIndex];
     }
 
+    public void setValueAt(Object aValue, int row, int col) {
+        data[row][col] = aValue;
+        fireTableCellUpdated(row, col);
+    }
+
 }
