@@ -14,8 +14,5 @@ public class Main {
         public static void main(String[] args)  throws IOException {
         MainWindow mainWindow = new MainWindow();
         mainWindow.createMainWindow();
-
-                List<Event> events  = service.getAllEvents();
-                events.forEach(System.out::println);
         }
 }

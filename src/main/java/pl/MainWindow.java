@@ -131,6 +131,34 @@ public class MainWindow {
         timetable.getSelectionModel().addListSelectionListener(e -> {
             popupMenuCreator.setData(timetable.getSelectedRow(), timetable.getSelectedColumn());
         });
+
+        List<Event> list = null;
+        try {
+            list = service.getAllEvents();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        for(int i=1; i<8; i++) {
+            for (int j=0; j<numberOfHours*2+1; j++) {
+                timetable.setValueAt("", j, i);
+            }
+        }
+
+        EventCompositor ev = EventCompositor.getInstance();
+        ev.components.clear();
+
+        Iterator<Event> it = list.iterator();
+        while(it.hasNext()) {
+            Event event = it.next();
+            EventCompositor.SingleEvent singleEvent = ev.new SingleEvent();
+            singleEvent.name = event.getName();
+            singleEvent.fromHour = event.getFromHour();
+            singleEvent.toHour = event.getToHour();
+            singleEvent.day = event.getDay();
+            ev.components.add(singleEvent);
+        }
+        update();
     }
 
     static void update() {
