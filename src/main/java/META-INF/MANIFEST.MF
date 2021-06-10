@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: main.Main
+Class-Path: okio-2.8.0.jar kotlin-stdlib-common-1.4.0.jar kotlin-stdlib-
+ 1.4.10.jar annotations-13.0.jar lombok-1.18.20.jar okhttp-4.9.1.jar jac
+ kson-annotations-2.12.3.jar jackson-core-2.12.3.jar jackson-databind-2.
+ 12.3.jar jackson-datatype-jsr310-2.12.3.jar
+

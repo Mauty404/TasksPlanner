@@ -75,7 +75,14 @@ public class MainWindow {
                 ioException.printStackTrace();
             }
 
+            for(int i=1; i<8; i++) {
+                for (int j=0; j<numberOfHours*2+1; j++) {
+                    timetable.setValueAt("", j, i);
+                }
+            }
+
             EventCompositor ev = EventCompositor.getInstance();
+            ev.components.clear();
 
             Iterator<Event> it = list.iterator();
             while(it.hasNext()) {

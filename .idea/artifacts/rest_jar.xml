@@ -1,0 +1,23 @@
+<component name="ArtifactManager">
+  <artifact name="rest:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/rest_jar</output-path>
+    <root id="root">
+      <element id="archive" name="rest.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="rest" />
+      </element>
+      <element id="library" level="project" name="Maven: com.squareup.okio:okio:2.8.0" />
+      <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-common:1.4.0" />
+      <element id="library" level="project" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.4.10" />
+      <element id="library" level="project" name="Maven: org.jetbrains:annotations:13.0" />
+      <element id="library" level="project" name="Maven: org.projectlombok:lombok:1.18.20" />
+      <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:4.9.1" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.3" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.12.3" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.12.3" />
+      <element id="library" level="project" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3" />
+    </root>
+  </artifact>
+</component>
